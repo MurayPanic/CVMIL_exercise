@@ -1,5 +1,5 @@
-# CVMIL_exercise
-This repo hold the files of my answer for the exercises in the textbook Computer Vision: Model, Inference, Learning.
+# CVMLI_exercise
+This repo hold the files of my answer for the exercises in the textbook Computer Vision: Model, Learning and Inference.
 I did the exercise myself. I can not 100% guarantee it is correct. If you find any error, please contact me.
 
 I also summarize eacy chapters' content with my understanding.
