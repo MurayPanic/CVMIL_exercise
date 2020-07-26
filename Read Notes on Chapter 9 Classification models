@@ -1,0 +1,114 @@
+# Chapter 9: Classification models
+
+
+
+## What is this chapter about?
+
+**A:** This chapter discuss the classification models. A classification task is to put objects into certain categories according to the object attributes. In this task, the world state $w$ is the categories and the observed data $x$ is the object's attributes. It is easily known that the world state $w$ is discrete. The observed data can be either continuous or discrete. When the observed data is discrete, the final model will be a nested categorical or Bernoulli distribution. In this chapter, it assumes the data $x$ to be continuous and the world state $w$ to be binary.
+
+When the world state $w$ is binary, it is natural to model it with Bernoulli distribution and make its parameter a linear function of the data $x$. However, the data $x$ is continuous and the linear function based on it has an infinite ranges while the parameters of the Bernoulli distribution requires to be within $[0,1]$. To solve this conflict, the linear function is first passed through a sigmoid function before becoming the parameter of the distribution. With sigmoid function, we map $[-\inf, inf]$ to $[0,1]$.  Thus we have the model:
+$$
+Pr(w|\phi,x)=Bern_w[sig[a]]= Bern_w\left[\frac{1}{1+\exp[-\phi^Tx]}\right]
+$$
+
+
+The result model is very similar to a regression model. In fact, we can regard it as a regression model between the world state $w$ and the activation $sig[a]$. Because both of them are continuous. That is why it is called logistic regression while it is actually applied to classification tasks.
+
+
+
+## How to learn the logistic regression model?
+
+**A:** For the basic form of logistic regression model above, it can be learned with MLE. But unfortunately, there is no closed form solution of the parameters. We have to use non-linear optimization technique such as Newton methods to find the parameters that maximize the likelihood. 
+
+But fortunately, the objective function, which is also the logarithm of the likelihood, is a concave function. Its global maxima can be achieved with Newton methods.
+
+
+
+## What are the limitations of the logistic regression model above?
+
+**A:** Similar to the traditional regression model, it also have three limitations:
+
+- Overconfidence in estimation. The common problem for point estimation using MLE.
+- Unable to describe non-linear decision boundary.
+- Inefficient and prone to over-fitting in high dimensions.
+
+
+
+## How to solve the problem of overconfidence in estimation by using Bayesian approach?
+
+**A:**  By using a Bayesian approach, we estimate the posterior distribution of parameters instead of a point on the distribution. We introduce a prior of the parameters and calculate the posterior distribution with Bayesian rule.
+
+However there is no conjugate prior for the likelihood in the logistic regression. Thus, we use Laplace approximate to calculate the posterior distribution of the parameters. That is to approximate the complex posterior distribution with multivariate normal. 
+
+The multivariate normal should be :
+
+- Its mean is at the peak of the posterior distribution;
+- Its covariance has the same second derivatives at the peak  as that of the true posterior distribution at its peak.
+
+Approximation is needed not only in learning but also in inference. The calculation of predictive distribution   contained the approximated posterior distribution. The predictive distribution is obtained by numerical integration.
+
+
+
+## What is the decision boundary?
+
+**A:** The decision boundary separates different world states. It can be a line or a hyperplane. 
+
+For a two class classification problem, the decision boundary is a set of position in data space where $Pr(w=1|x)=Pr(w=0|x)=0.5$.
+
+For the simple logistic regression model, its decision boundary is always linear. It suggests that the decision boundary is either a straight line or a flat hyperplane.
+
+
+
+## How to build a logistic regression model with non-linear decision boundary?
+
+
+
+**A:**  By applying nonlinear activation, we can create a logistic regression model with nonlinear decision boundary. We first pass the data $x$ to the non-linear function, then pass non-linear transformed value to a linear function. The result activation is a linear combination of a series of non-linear functions. Typical nonlinear transformation include: Heaviside step functions of projections, arc tangent functions of projections and radical basis function.
+
+
+
+## Is it difficult to learn and inference a logistic regression model with non-linear decision boundary?
+
+**A:** Unfortunately yes! 
+
+The learning and inference procedure is similar to a basic logistic regression. The learning of the model can be achieved with MLE and nonlinear optimization technique such as Newton method. But unfortunately, the function of the optimization is non-concave and thus the learned parameters is possible local maxima.
+
+
+
+## Are there any other way to construct complex decision boundary?
+
+**A:**  Classification trees is another way to construct nonlinear decision boundary. In a classification tree, it use a gating function for activation instead of a linear combination of nonlinear function. 
+
+
+
+## How to make the logistic regression model work efficiently with high dimensional data? 
+
+**A:** The key is to lower the dimension the model handled and encourage sparsity.
+
+ Similar to linear regression model, we can may logistic regression model have better performance when processing high dimensional data by introducing *dual parameterization* and priors on parameters  that encourage sparsity.
+
+With dual parameterization, we expression the gradient vector $w$ as a weighted sum of the observed data. The distribution of the parameters is assume to follow t-distribution to encourage sparsity. The result model is then called relevance vector classification.
+
+
+
+## Are there any other way to encourage sparsity in the model?
+
+**A:** There are other ways to encourage sparsity in the model. One is using incremental fitting.
+
+In incremental fitting, we estimate the parameters one by one. Each time we add one parameter that can improves the objective function most into the model, and then fix it and continue the next estimation.
+
+
+
+## What is boosting?
+
+**A:** Boosting is a special case of the incremental fitting approach. It combines a brunch of weak classifiers to form a strong classifier. Usually, a large set of weak classifiers is predefined. In the incremental learning process, we first search in the set to find a weak classifier that can improve the objective function most, include the selected weak classifier into the objective function,  then estimate the corresponding parameters.
+
+
+
+## How to develop models for multi-class classification?
+
+**A:** The model we present at the beginning are for binary classification. In multi-class classification, the difference is:
+
+- We use categorical distribution to model the world stateinstead of Bernoulli distribution.
+- We use softmax function for activation instead of sigmoid function.
+

@@ -1,0 +1,131 @@
+# Chapter 8 Regression models
+
+## What is this Chapter about?
+
+**A:** This chapter is about regression models. When talk about regression model, the first thing come to my mind is linear regression. But the linear regression model in this chapter is a little bit different from the one I have previously learned. From my previous knowledge, linear regression is about directly finding the parameters of the models that describe the linear relationship between two variables. But here we develop a probabilistic model on world state based on the observed data. The parameters of the model is a linear function of the observed data. 
+
+The regression model discussed in this chapter is limited to discriminative model $Pr(w|x)$, which both the world state and data are continuous variables.
+
+
+
+## What regression models are introduced in this chapter
+
+**A:** This chapter starts with the linear regression model, and introduce other regression models by addressing the limitation of the linear regression model. There are six types of regressions discussed in this chapter:
+
+- Linear regression model
+- Bayesian linear regression
+- Nonlinear regression
+- Gaussian process regression
+- Sparse linear regression
+- Dual linear regression
+- Relevance vector regression
+
+
+
+## What is a linear regression model in probabilistic form?
+
+**A:** The linear regression model in this chapter is a little bit different from the linear regression we learned in the statistic courses. The linear regression in static courses, we try to describe the linear relation between two variables $x$ and $y$ in form of :
+$$
+y = ax+b
+$$
+
+
+But in this chapter, we develop a discriminative model $Pr(w|x)$ that describes the world state $w$ according to the observed data $x$. The parameters of this probabilistic model is a linear function of the data $x$. Suppose we develop the model based on normal distribution and let the mean of the distribution be a linear function of the data $x$, we have:
+$$
+Pr(w|x)= Norm_{w}[\phi_0+\phi_1x, \sigma^2]
+$$
+
+
+
+## How to learn the parameters of a linear regression model?
+
+**A: ** The linear regression model in the above form can be easily learned with MLE.
+
+
+
+## What are the limitations of the linear regression model?
+
+**A:**  There mainly three limitations:
+
+- The parameters estimated with MLE are too confident. The MLE make point estimation on the parameters.
+- The linear regression model can not describe non-linear relationship.
+- The computational cost is expensive when the observed data is high dimensional
+
+
+
+## What is Bayesian linear regression?
+
+**A:**  Bayesian linear regression estimate the distribution of the parameters, different from MLE which only make point estimations on parameters. The predictive probability of the world state $w$ is an integral over the multiplication of the likelihood and posterior distribution.
+
+
+
+## What is nonlinear regression?
+
+**A:**  Nonlinear regression model is used to describe the nonlinear relationship between the world state $w$ and the observed data $x$. But in fact, the nonlinear regression model described here is essentially a variant of the regression model. The observed data $x$ is first passed to a nonlinear transformation to get the transformed value, then these values are passed to a linear function to form the parameters of the probabilistic model. So you can view this model as a weighted combination of a bunch of nonlinear functions.
+
+
+
+## Is it difficult to learn a nonlinear regression model?
+
+**A:** You can still learn it with MLE or Bayesian method. 
+
+Noted that if you learn the model with Bayesian method, you need to compute the inner products of the nonlinear transformation in the predictive distribution.  When the nonlinear transformation is high dimensional, the computational cost is high. In this situation, you can use the kernel trick. 
+
+
+
+## What is the kernel trick?
+
+**A:** The kernel trick is to use a kernel function to replace the inner products of the transformation in the model. If you replace the inner products in the nonlinear regression model with kernel function, you will get  a **Gaussian process regression model**. 
+
+Noted that although the introduction of the kernel functions simplify the calculation of the predictive distribution, it cause difficulties in learning and requires nonlinear optimization procedure for learning. 
+
+
+
+## What is sparse linear regression?
+
+**A:** Sparse linear regression aims to fined a gradient vector $\phi$ where most of the entries are zero. It hopes to find the parameters of the distribution that is a sparse function of the observed data $x$. It suggests that the world state $w$ is only determines by not all but only several dimensions of the data.
+
+To encourage sparsity, the distribution of the gradient parameter $\phi$ is set to be a product of one-dimensional t-distributions (Note: Not multivariate t-distribution). The product of univariate t-distribution has ridges of high probability along the coordinate axes, which encourages sparseness.
+
+
+
+## How to learn a sparse linear regression model?
+
+**A:** Because of using a product of t-distributions for prior, the posterior distribution  $Pr(\phi | X, w, \sigma^2) $ lost the conjugacy relationship. There is no close form expression for the posterior distribution if we would like to use a Bayesian approach.
+
+To calculate posterior distribution, one way is to approximate the prior with an infinite weighted sum of normal distribution, that is to introduce a hidden variable. Then the posterior distribution can be re-written as an integral over hidden variable. But the result integral still can not be calculated in closed form. However, we can make approximation by maximizing over hidden variable.
+
+For more details, please referred to the context.
+
+
+
+## What is dual linear regression?
+
+**A:**  In the original linear gradient vector $\phi$ is actually the weight for each dimensions of data $x$. It is modeling how each dimension of data influence the world state.  A dual linear model re-parameterize the linear model with a vector $\psi$ which has $I$ entries, where $I$ is the number of the training examples. Since this model is obtained by re-parameterize the linear model, it is term dual parameterization
+
+The the gradient vector $\psi$ of the dual model is the  weight of each training data. Thus, the dual model is actually telling how each training examples contributing to the decision of the world state.
+
+
+
+## How to learn a dual linear regression model?
+
+**A:**  The parameters of the dual model can be learned with MLE or Bayesian approach. 
+
+
+
+## What is relevance vector regression?
+
+**A:** Relevance vector regression is also an approach for sparse linear regression. It is based on dual model. Similar to sparse linear regression, it introduce a product of one-dimensional t-distributions as prior to the dual model. 
+
+
+
+## How to learn a relevance vector regression model?
+
+**A:** Situation is similar to sparse linear regression model. After applying a product of one-dimensional t-distributions as prior, the posterior distribution lost its conjugacy relation and its calculation has to be approximated.
+
+The approximation is achieved by introducing hidden variables and maximizing the hidden variables.
+
+
+
+
+
